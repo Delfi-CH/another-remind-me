@@ -1,44 +1,3 @@
-# Architecture
-
-## Components
-
-- Container
-
-- Card
-
-- Tabs (native & Generic)
-
-- Switch
-
-- Text input
-
-- Button (with & without border)
-
-- Drop-down
-
-- Calendar
-
-- Timepicker
-
-- Map
-
-- Checkbox
-
-## Navigation
-
-Expo Router with Tabs
-
-Routes: 
-
-- /
-
-- /settings
-
-- /new
-
-## Datamodels
-
-```ts
 export enum TimeMeasurement {
     Minutes,
     Hours,
@@ -93,7 +52,7 @@ export interface TimeReminder {
 export interface LocationReminder {
     latitude: number
     longitude: number
-    radius: number //in meters
+    radius: number // in meters
 }
 
 export interface Sound {
@@ -113,47 +72,3 @@ export interface Reminder {
     playSound: boolean
     sound?: Sound
 }
-
-```
-
-## State & Sideeffects
-
-Shared State:
-    
- - List of reminders
- - Sounds
- - Settings
- - Local Time
- - GPS Data
-
-Local State:
-
-- /:
-    - none
-
-- /new:
-    - Local Reminder Object
-    - MapData
-
-- /settings
-    - Permissions
-
-APIs:
-
-Expo: 
-
-- SQLITE
-- Location
-- Notification
-- Background Process
-- Audio
-- Battery (performance saving background process)
-- Calendar
-- FileSystem
-- LocalAuthentication
-- Maps?
-
-Custom:
-
-- Alarm
-- Maps?

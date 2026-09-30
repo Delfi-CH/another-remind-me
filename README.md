@@ -4,8 +4,12 @@ An app to set reminders.
 
 ## Build & Run:
 
-1. Clone `https://github.com/Delfi-CH/another-remind-me`
+**Important: You HAVE to use Java 17 to build this or it wont work!**
+
+1. Clone the Repository `git clone https://github.com/Delfi-CH/another-remind-me`
 
 2. Install Dependencies: `npm install`
 
-3. Build and run Android: `npm run android`
+3. Install Submodule(s): `git submodule update --init --recursive`
+
+3. Build and run Android: `npm run android:install`

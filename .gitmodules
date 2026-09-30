@@ -1,0 +1,3 @@
+[submodule "Klock"]
+	path = Klock
+	url = https://github.com/HeedlessSoap325/Klock.git
