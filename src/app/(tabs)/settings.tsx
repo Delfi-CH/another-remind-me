@@ -1,10 +1,10 @@
 import { useReminder } from "@/context/reminderContext";
-import { getStyles } from "@/style/global";
-import { useState } from "react";
-import { View, Text, Appearance, Switch } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
-import * as Notifications from "expo-notifications";
+import { getStyles } from "@/style/styles";
 import * as Location from "expo-location";
+import * as Notifications from "expo-notifications";
+import { useState } from "react";
+import { Appearance, Switch, Text, View } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

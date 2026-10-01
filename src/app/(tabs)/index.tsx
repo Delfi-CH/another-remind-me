@@ -1,11 +1,10 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import { getStyles } from "@/style/global";
 import { useReminder } from "@/context/reminderContext";
-
+import { getStyles } from "@/style/styles";
+import { Text, View } from "react-native";
 
 export default function Index() {
   const context = useReminder();
-  const styles = getStyles(context.settings.darkMode ?? true)
+  const styles = getStyles(context.settings.darkMode ?? true);
 
   return (
     <View style={styles.container}>
@@ -13,4 +12,3 @@ export default function Index() {
     </View>
   );
 }
-

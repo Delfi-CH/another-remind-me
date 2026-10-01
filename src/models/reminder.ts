@@ -15,13 +15,6 @@ export enum Day {
     Sunday
 }
 
-export interface DayOfMonth {
-    type: "index"|"weekday"
-    index?: number
-    weekdayIndex?: number
-    weekday?: Day
-}
-
 export interface TimeInterval {
     type: "regular"|"special"
     regular: RegularTimeInterval
@@ -30,15 +23,15 @@ export interface TimeInterval {
 
 export interface RegularTimeInterval {
     measurement: TimeMeasurement
-    value: number
+    value: number,
+    repeat: boolean
 }
 
 export interface SpecialTimeInterval {
-    type: "days"|"workdays"|"weekends"|"dayOfMonth"
+    type: "days"|"workdays"|"weekends"
     days?: Day[]
     workdays?: boolean
     weekends?: boolean
-    dayOfMonth?: DayOfMonth
 }
 
 export interface TimeReminder {

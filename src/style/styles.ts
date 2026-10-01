@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, ViewStyle } from "react-native";
 
 export function getStyles(darkMode: boolean): any {
   return StyleSheet.create({
     container: {
       flex: 1,
       alignItems: "center",
-      backgroundColor: darkMode ? "#121418" : "#FFFFFF",
+      backgroundColor: darkMode ? "#121418" : "#CCCCCC",
       paddingTop: 50,
       padding: 30,
       gap: 20
@@ -36,5 +36,31 @@ export function getStyles(darkMode: boolean): any {
       width: "100%",
       gap: 10,
     },
+    input: {
+      borderWidth: 1,
+      width: "80%",
+      height: 50,
+      borderColor: darkMode ? "#FFFFFF" : "#121418",
+      borderRadius: 10,
+      color: darkMode ? "#FFFFFF" : "#121418",
+    }
   });
+}
+
+export function styleBigButton(top: number, left: number, width: number, height: number, color: string, pressed: boolean, zIndex: number = 1): ViewStyle {
+  return {
+    position: "absolute",
+    width: width,
+    height: height,
+    backgroundColor: color,
+    opacity: pressed ? 0.5 : 1,
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+    top: top,
+    left: left,
+    zIndex: zIndex
+  }
 }
