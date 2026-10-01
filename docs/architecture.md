@@ -151,9 +151,4 @@ Expo:
 - Calendar
 - FileSystem
 - LocalAuthentication
-- Maps?
-
-Custom:
-
-- Alarm
-- Maps?
+- Maps
