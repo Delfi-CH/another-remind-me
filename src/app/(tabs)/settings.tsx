@@ -135,7 +135,7 @@ export default function Settings() {
           setValue={setStylePickerValue}
           setItems={setStyleModes}
           onChangeValue={(value) => handleStyleChange(String(value))}
-          style={styles.dropdown}
+          style={{...styles.dropdown, backgroundColor: "#F6F8FA",}}
           textStyle={styles.dropdownText}
         />
       </View>
