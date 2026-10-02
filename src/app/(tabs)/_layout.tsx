@@ -1,12 +1,10 @@
-import { ReminderProvider } from "@/context/reminderContext";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
-import { useRouter } from "expo-router";
+import { useEverything } from "@/context/everythingContext";
 
-export default function RootLayout() {
-  const router = useRouter();
+export default function TabsLayout() {
+  const context = useEverything()
   return (
-    <ReminderProvider>
-      <NativeTabs>
+      <NativeTabs hidden={!context.showTabs}>
         <NativeTabs.Trigger name="index">
           <NativeTabs.Trigger.Label>My Reminders</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon md="alarm" />
@@ -20,6 +18,5 @@ export default function RootLayout() {
           <NativeTabs.Trigger.Icon md="settings" />
         </NativeTabs.Trigger>
       </NativeTabs>
-    </ReminderProvider>
   );
 }

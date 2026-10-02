@@ -1,4 +1,4 @@
-import { useReminder } from "@/context/reminderContext";
+import { useEverything } from "@/context/everythingContext";
 import { getStyles } from "@/style/styles";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
@@ -16,7 +16,7 @@ Notifications.setNotificationHandler({
 });
 
 export default function Settings() {
-  const context = useReminder();
+  const context = useEverything();
   const styles = getStyles(context.settings.darkMode ?? false);
   const [stylePickerOpen, setStylePickerOpen] = useState(false);
   const [stylePickerValue, setStylePickerValue] = useState(

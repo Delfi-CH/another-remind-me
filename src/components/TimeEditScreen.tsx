@@ -1,11 +1,11 @@
-import { useReminder } from "@/context/reminderContext";
+import { useEverything } from "@/context/everythingContext";
+import { Day, TimeMeasurement, TimeReminder } from "@/models/reminder";
 import { getStyles } from "@/style/styles";
-import { Pressable, Switch, Text, TextInput, View } from "react-native";
-import { TimeMeasurement, TimeReminder, Day } from "@/models/reminder";
-import { useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import { Pressable, Switch, Text, TextInput, View } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface TimeEditScreenProps {
   visible: boolean;
@@ -13,7 +13,7 @@ interface TimeEditScreenProps {
 }
 
 export default function TimeEditScreen(props: TimeEditScreenProps) {
-  const context = useReminder();
+  const context = useEverything();
   const [time, setTime] = useState<TimeReminder>();
   const [timeMeasurementDropdownOpen, setTimeMeasurementDropdownOpen] =
     useState(false);
@@ -26,44 +26,45 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
   ]);
   const [specialTimeIntervaDropdownOpen, setSpecialTimeIntervaDropdownOpen] =
     useState(false);
-  const [specialTimeIntervalValue, setSpecialTimeIntervalValue] = useState(null);
+  const [specialTimeIntervalValue, setSpecialTimeIntervalValue] =
+    useState(null);
   const [specialTimeIntervalList, setSpecialTimeIntervalList] = useState([
     { label: "today", value: "today" },
     { label: "tomorrow", value: "tomorrow" },
-    { label: "on Weekdays...", value: "weekdays"},
-    { label: "on Workdays", value: "workdays"},
-    { label: "on Weekends", value: "weekends"},
-    { label: "on Days of the Month...", value: "dayOfTheMonth"},
+    { label: "on Weekdays...", value: "weekdays" },
+    { label: "on Workdays", value: "workdays" },
+    { label: "on Weekends", value: "weekends" },
+    { label: "on Days of the Month...", value: "dayOfTheMonth" },
   ]);
 
-  const [weekdayDropdownOpen, setWeekdayDropdownOpen] =
-    useState(false);
+  const [weekdayDropdownOpen, setWeekdayDropdownOpen] = useState(false);
   const [weekdayDropdownValue, setWeekdayDropdownValue] = useState(null);
   const [weekdayDropdownList, setWeekdayDropdownList] = useState([
     { label: "Monday", value: Day.Monday },
     { label: "Tuesday", value: Day.Tuesday },
-    { label: "Wednesday", value: Day.Wednesday},
-    { label: "Thursday", value: Day.Thursday},
-    { label: "Friday", value: Day.Friday},
-    { label: "Saturday", value: Day.Saturday},
-    { label: "Sunday", value: Day.Sunday},
+    { label: "Wednesday", value: Day.Wednesday },
+    { label: "Thursday", value: Day.Thursday },
+    { label: "Friday", value: Day.Friday },
+    { label: "Saturday", value: Day.Saturday },
+    { label: "Sunday", value: Day.Sunday },
   ]);
 
-
-  const [showTimePicker, setShowTimePicker] = useState(false)
-  const [timeOfDay, setTimeOfDay] = useState(new Date())
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [timeOfDay, setTimeOfDay] = useState(new Date());
 
   const styles = getStyles(context.settings.darkMode ?? true);
 
   return (
-      <View style={{
+    <View
+      style={{
         display: "flex",
         position: "absolute",
         zIndex: 100,
         width: "120%",
         top: 240,
         margin: 10,
-      }}>
+      }}
+    >
       {props.visible ? (
         <View
           style={{
@@ -106,8 +107,8 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
               inputMode="numeric"
             ></TextInput>
             <DropDownPicker
-                listMode="MODAL"
-                modalProps={{
+              listMode="MODAL"
+              modalProps={{
                 animationType: "fade",
               }}
               open={timeMeasurementDropdownOpen}
@@ -123,8 +124,8 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
                 alignSelf: "center",
                 backgroundColor: "#F6F8FA",
               }}
-              onOpen={()=> StatusBar.setHidden(true, "slide")}
-              onClose={()=> StatusBar.setHidden(false, "slide")}
+              onOpen={() => StatusBar.setHidden(true, "slide")}
+              onClose={() => StatusBar.setHidden(false, "slide")}
               textStyle={{ ...styles.dropdownText, width: "10%" }}
               containerStyle={{ width: "90%" }}
             />
@@ -134,14 +135,16 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
             <Switch></Switch>
           </View>
           <View style={styles.row}>
-          <Pressable onPress={() => props.onSubmit()}>
-            <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>Save</Text>
-          </Pressable>
-          <Pressable onPress={() => props.onSubmit()}>
-            <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
-              Cancel
-            </Text>
-          </Pressable>
+            <Pressable onPress={() => props.onSubmit()}>
+              <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
+                Save
+              </Text>
+            </Pressable>
+            <Pressable onPress={() => props.onSubmit()}>
+              <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
+                Cancel
+              </Text>
+            </Pressable>
           </View>
           <View
             style={{
@@ -154,12 +157,40 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
           ></View>
           <View style={styles.row}>
             <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>at</Text>
-            <Pressable onPress={()=> setShowTimePicker((previous)=> !previous)}><Text style={{ ...styles.textLarger, color: "#FFFFFF", borderWidth: 1, borderColor: "#FFFFFF", padding: 10, borderRadius: 10, marginRight: -50 }}>{timeOfDay.getHours()}:{timeOfDay.getMinutes()}</Text></Pressable>
-            {showTimePicker ? <DateTimePicker mode="time" value={new Date()} onDismiss={()=>setShowTimePicker((previous)=> !previous)} onValueChange={(e, date)=>{setTimeOfDay(date); setShowTimePicker((previous)=> !previous)}}></DateTimePicker> : ""}
+            <Pressable
+              onPress={() => setShowTimePicker((previous) => !previous)}
+            >
+              <Text
+                style={{
+                  ...styles.textLarger,
+                  color: "#FFFFFF",
+                  borderWidth: 1,
+                  borderColor: "#FFFFFF",
+                  padding: 10,
+                  borderRadius: 10,
+                  marginRight: -50,
+                }}
+              >
+                {timeOfDay.getHours()}:{timeOfDay.getMinutes()}
+              </Text>
+            </Pressable>
+            {showTimePicker ? (
+              <DateTimePicker
+                mode="time"
+                value={new Date()}
+                onDismiss={() => setShowTimePicker((previous) => !previous)}
+                onValueChange={(e, date) => {
+                  setTimeOfDay(date);
+                  setShowTimePicker((previous) => !previous);
+                }}
+              ></DateTimePicker>
+            ) : (
+              ""
+            )}
             <DropDownPicker
               listMode="MODAL"
               modalProps={{
-                animationType: "fade"
+                animationType: "fade",
               }}
               open={specialTimeIntervaDropdownOpen}
               value={specialTimeIntervalValue}
@@ -168,9 +199,9 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
               setValue={setSpecialTimeIntervalValue}
               setItems={setSpecialTimeIntervalList}
               onChangeValue={(value) => {
-                console.log(value)
+                console.log(value);
                 if (value === "weekdays") {
-                    setWeekdayDropdownOpen((previous)=>!previous)
+                  setWeekdayDropdownOpen((previous) => !previous);
                 }
               }}
               style={{
@@ -181,14 +212,15 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
               }}
               textStyle={{ ...styles.dropdownText, width: "10%" }}
               containerStyle={{ width: "90%" }}
-              onOpen={()=> StatusBar.setHidden(true, "slide")}
-              onClose={()=> StatusBar.setHidden(false, "slide")}
+              onOpen={() => StatusBar.setHidden(true, "slide")}
+              onClose={() => StatusBar.setHidden(false, "slide")}
             />
           </View>
-          {weekdayDropdownOpen ? <DropDownPicker
-          listMode="MODAL"
-          modalProps={{
-                animationType: "fade"
+          {weekdayDropdownOpen ? (
+            <DropDownPicker
+              listMode="MODAL"
+              modalProps={{
+                animationType: "fade",
               }}
               multiple={true}
               open={weekdayDropdownOpen}
@@ -198,7 +230,7 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
               setValue={setWeekdayDropdownValue}
               setItems={setWeekdayDropdownList}
               onChangeValue={(value) => {
-                console.log(value)
+                console.log(value);
               }}
               style={{
                 ...styles.dropdown,
@@ -208,22 +240,27 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
               }}
               textStyle={{ ...styles.dropdownText, width: "10%" }}
               containerStyle={{ width: "90%" }}
-              onOpen={()=> StatusBar.setHidden(true, "slide")}
-              onClose={()=> StatusBar.setHidden(false, "slide")}
-            /> : ""}
+              onOpen={() => StatusBar.setHidden(true, "slide")}
+              onClose={() => StatusBar.setHidden(false, "slide")}
+            />
+          ) : (
+            ""
+          )}
           <View style={styles.row}>
             <Text style={styles.textLarger}>Repeat:</Text>
             <Switch></Switch>
           </View>
           <View style={styles.row}>
-          <Pressable onPress={() => props.onSubmit()}>
-            <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>Save</Text>
-          </Pressable>
-          <Pressable onPress={() => props.onSubmit()}>
-            <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
-              Cancel
-            </Text>
-          </Pressable>
+            <Pressable onPress={() => props.onSubmit()}>
+              <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
+                Save
+              </Text>
+            </Pressable>
+            <Pressable onPress={() => props.onSubmit()}>
+              <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
+                Cancel
+              </Text>
+            </Pressable>
           </View>
         </View>
       ) : (
@@ -231,5 +268,4 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
       )}
     </View>
   );
-  
 }

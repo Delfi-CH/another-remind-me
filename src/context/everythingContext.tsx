@@ -9,24 +9,28 @@
   import AsyncStorage from "@react-native-async-storage/async-storage";
   import { Settings } from "@/models/settings";
 
-  interface ReminderContextType {
+  interface EverythingContextType {
     reminders: Reminder[];
     settings: Settings;
     isLoading: boolean;
+    showTabs: boolean;
     addReminder: (reminder: Reminder) => void;
     updateReminder: (id: number, reminder: Reminder) => void;
     deleteReminder: (id: number) => void;
     updateSettings: (settins: Settings) => void;
+    toggleTabs: () => void;
+    setTabs: (visible: boolean) => void;
   }
 
-  const ReminderContext = createContext<ReminderContextType | undefined>(
+  const ReminderContext = createContext<EverythingContextType | undefined>(
     undefined,
   );
 
-  export function ReminderProvider({ children }: { children: ReactNode }) {
+  export function EverythingProvider({ children }: { children: ReactNode }) {
     const [reminders, setReminders] = useState<Reminder[]>([]);
     const [settings, setSettings] = useState<Settings>({});
     const [loaded, setLoaded] = useState(false);
+    const [showTabs, setShowTabs] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -99,16 +103,27 @@
       setSettings(settings);
     }
 
+    function toggleTabs(): void {
+      setShowTabs((previous)=> !previous)
+    }
+
+    function setTabs(visible: boolean): void {
+      setShowTabs(visible)
+    }
+
     return (
       <ReminderContext.Provider
         value={{
           reminders,
           settings,
+          showTabs,
           isLoading,
           addReminder,
           updateReminder,
           deleteReminder,
           updateSettings,
+          toggleTabs,
+          setTabs
         }}
       >
         {children}
@@ -116,7 +131,7 @@
     );
   }
 
-  export function useReminder() {
+  export function useEverything() {
     const context = useContext(ReminderContext);
     if (!context) {
       throw new Error(

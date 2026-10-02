@@ -1,24 +1,30 @@
-import { useReminder } from "@/context/reminderContext";
+import MapEditScreen from "@/components/MapEditScreen";
+import TimeEditScreen from "@/components/TimeEditScreen";
+import { useEverything } from "@/context/everythingContext";
+import { LocationReminder, TimeReminder } from "@/models/reminder";
 import { getStyles, styleBigButton } from "@/style/styles";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
 import { Pressable, Switch, Text, TextInput, View } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import TimeEditScreen from "@/components/TimeEditScreen";
-import { TimeReminder } from "@/models/reminder";
 
 export default function New() {
-  const context = useReminder();
+  const context = useEverything();
   const styles = getStyles(context.settings.darkMode ?? true);
 
   const [name, setName] = useState("");
 
   const [showTimeSubscreen, setShowTimeSubscreen] = useState(false);
+  const [showMapSubscreen, setShowMapSubscreen] = useState(false);
 
   const [sendNotification, setSendNotification] = useState(false);
 
-  function handleTimeSubmit(time: TimeReminder|undefined) {
-    setShowTimeSubscreen((previous)=> !previous)
-    console.log(time ?? "no time set")
+  function handleTimeSubmit(time: TimeReminder | undefined) {
+    setShowTimeSubscreen((previous) => !previous);
+    console.log(time ?? "no time set");
+  }
+  function handleMapSubmit(location: LocationReminder | undefined) {
+    setShowMapSubscreen((previous) => !previous);
+    console.log(location ?? "no location set");
   }
 
   return (
@@ -36,14 +42,40 @@ export default function New() {
       <View style={styles.row}>
         <Text style={styles.textLarger}>Time:</Text>
         <Pressable
-          onPress={() => setShowTimeSubscreen((previous) => !previous)}
+          onPress={() => {
+            setShowMapSubscreen(false);
+            setShowTimeSubscreen((previous) => !previous);
+          }}
         >
           <Text style={styles.textLarger}>Edit</Text>
         </Pressable>
+        <Text style={styles.textLarger}>| Use:</Text>
+        <Switch></Switch>
       </View>
 
-      <TimeEditScreen visible={showTimeSubscreen} onSubmit={(t)=>handleTimeSubmit(t)}></TimeEditScreen>
-    
+      <TimeEditScreen
+        visible={showTimeSubscreen}
+        onSubmit={(t) => handleTimeSubmit(t)}
+      ></TimeEditScreen>
+      <MapEditScreen
+        visible={showMapSubscreen}
+        onSubmit={(l) => handleMapSubmit(l)}
+      ></MapEditScreen>
+
+      <View style={styles.row}>
+        <Text style={styles.textLarger}>Map:</Text>
+        <Pressable
+          onPress={() => {
+            setShowTimeSubscreen(false);
+            setShowMapSubscreen((previous) => !previous);
+          }}
+        >
+          <Text style={styles.textLarger}>Edit</Text>
+        </Pressable>
+        <Text style={styles.textLarger}>| Use:</Text>
+        <Switch></Switch>
+      </View>
+
       <View style={styles.row}>
         <Text style={styles.textLarger}>Send Notification:</Text>
         <Switch
@@ -62,7 +94,7 @@ export default function New() {
       >
         <View style={styles.row}>
           <MaterialIcons name="cancel" color="#FFF" size={30} />
-          <Text style={{...styles.textLarger, color: "#FFFFFF"}}>Cancel</Text>
+          <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>Cancel</Text>
         </View>
       </Pressable>
       <Pressable
@@ -72,7 +104,7 @@ export default function New() {
       >
         <View style={styles.row}>
           <MaterialIcons name="save" color="#FFF" size={30} />
-          <Text style={{...styles.textLarger, color: "#FFFFFF"}}>Save</Text>
+          <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>Save</Text>
         </View>
       </Pressable>
 
