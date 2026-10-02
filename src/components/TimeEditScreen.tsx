@@ -4,7 +4,7 @@ import { getStyles } from "@/style/styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Pressable, Switch, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, Switch, Text, TextInput, View } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
 interface TimeEditScreenProps {
@@ -14,7 +14,7 @@ interface TimeEditScreenProps {
 
 export default function TimeEditScreen(props: TimeEditScreenProps) {
   const context = useEverything();
-  const [time, setTime] = useState<TimeReminder>();
+  const [timeMeasurementCount, setTimeMeasurementCount] = useState(0);
   const [timeMeasurementDropdownOpen, setTimeMeasurementDropdownOpen] =
     useState(false);
   const [timeMeasurementValue, setTimeMeasurementValue] = useState(null);
@@ -24,6 +24,8 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
     { label: "Days", value: TimeMeasurement.Days },
     { label: "Weeks", value: TimeMeasurement.Weeks },
   ]);
+  const [repeatTimeMeasurement, setRepeatTimeMeasurement] = useState(false)
+
   const [specialTimeIntervaDropdownOpen, setSpecialTimeIntervaDropdownOpen] =
     useState(false);
   const [specialTimeIntervalValue, setSpecialTimeIntervalValue] =
@@ -53,6 +55,62 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
   const [timeOfDay, setTimeOfDay] = useState(new Date());
 
   const styles = getStyles(context.settings.darkMode ?? true);
+
+  function handleFirstSubmit() {
+    if (timeMeasurementCount <= 0) {
+      Alert.alert("Error", "Number must be greater than 0!");
+      return
+    }
+    if (timeMeasurementValue === null) {
+      Alert.alert("Error", "Please set a time measurement!");
+      return
+    }
+    let remind: TimeReminder = {
+      type: "interval",
+      interval: {
+        type: "regular",
+        regular: {
+          measurement: timeMeasurementValue,
+          value: timeMeasurementCount,
+          repeat: repeatTimeMeasurement,
+          start: Date.now()
+        }
+      }
+    }
+
+    props.onSubmit(remind);
+  }
+
+  function handleSecondSubmit() {
+    if (!timeOfDay) {
+      Alert.alert("Error", "Must set a time of day!");
+      return
+    }
+    if (specialTimeIntervalValue === null) {
+      Alert.alert("Error", "Please set an inteval!");
+      return
+    }
+    if (specialTimeIntervalValue === "days" && weekdayDropdownValue == null) {
+      Alert.alert("Error", "Please select weekdays!");
+      return
+    }
+    let remind: TimeReminder = {
+      type: "interval",
+      interval: {
+        type: "special",
+        special: {
+          type: specialTimeIntervalValue,
+          days: weekdayDropdownValue ?? undefined,
+          weekends: specialTimeIntervalValue === "weekends",
+          workdays: specialTimeIntervalValue === "workkdays",
+        }
+      },
+      hour: timeOfDay.getHours(),
+      minute: timeOfDay.getMinutes()
+    }
+
+    props.onSubmit(remind);
+  }
 
   return (
     <View
@@ -105,6 +163,14 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
             <TextInput
               style={{ ...styles.input, width: "30%", marginRight: -50 }}
               inputMode="numeric"
+              value={String(timeMeasurementCount)}
+              onChangeText={(string)=> {
+                const num = Number(string)
+                if (Number.isNaN(num)) {
+                  return
+                }
+                setTimeMeasurementCount(num)
+              }}
             ></TextInput>
             <DropDownPicker
               listMode="MODAL"
@@ -132,10 +198,10 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
           </View>
           <View style={styles.row}>
             <Text style={styles.textLarger}>Repeat:</Text>
-            <Switch></Switch>
+            <Switch value={repeatTimeMeasurement} onValueChange={(v)=> setRepeatTimeMeasurement(v)}></Switch>
           </View>
           <View style={styles.row}>
-            <Pressable onPress={() => props.onSubmit()}>
+            <Pressable onPress={handleFirstSubmit}>
               <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
                 Save
               </Text>
@@ -146,6 +212,10 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
               </Text>
             </Pressable>
           </View>
+
+          
+
+
           <View
             style={{
               borderBottomWidth: 10,
@@ -246,12 +316,9 @@ export default function TimeEditScreen(props: TimeEditScreenProps) {
           ) : (
             ""
           )}
+          <Text style={styles.textLarger}> </Text>
           <View style={styles.row}>
-            <Text style={styles.textLarger}>Repeat:</Text>
-            <Switch></Switch>
-          </View>
-          <View style={styles.row}>
-            <Pressable onPress={() => props.onSubmit()}>
+            <Pressable onPress={() => handleSecondSubmit()}>
               <Text style={{ ...styles.textLarger, color: "#FFFFFF" }}>
                 Save
               </Text>

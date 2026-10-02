@@ -1,7 +1,7 @@
 import { useEverything } from "@/context/everythingContext";
 import { getStyles, styleBigButton } from "@/style/styles";
 import { useState } from "react";
-import { Pressable, Text, View, TextInput } from "react-native";
+import { Pressable, Text, View, TextInput, Alert } from "react-native";
 import BigMap, { Coordinates } from "./BigMap";
 import { GoogleMaps } from "expo-maps";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -17,6 +17,23 @@ export default function MapEditScreen(props: MapEditScreenProps) {
   const styles = getStyles(context.settings.darkMode ?? true);
   const [showBigMap, setShowBigMap] = useState(false);
   const [coordinates, setCoordinates] = useState<Coordinates>();
+  const [radius, setRadius] = useState(100);
+
+  if (!props.visible) {
+    return null;
+  }
+
+  function handleSubmit() {
+      if (!coordinates) {
+        Alert.alert("Error", "Please set a location!")
+        return;
+      }
+      props.onSubmit({
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+        radius: radius
+      })
+  }
 
   return (
     <View
@@ -109,6 +126,14 @@ export default function MapEditScreen(props: MapEditScreenProps) {
                 <TextInput
                               style={{ ...styles.input, width: "10%" }}
                               inputMode="numeric"
+                               value={String(radius)}
+                               onChangeText={(string)=>{
+                                const num = Number(string)
+                if (Number.isNaN(num)) {
+                  return
+                }
+                setRadius(num)
+                               }}
                             ></TextInput>
                 <Text style={{
                   ...styles.textLarger,
@@ -133,7 +158,7 @@ export default function MapEditScreen(props: MapEditScreenProps) {
               style={({ pressed }) =>
                 styleBigButton(400, 230, 120, 60, "#00CC00", pressed)
               }
-              onPress={() => props.onSubmit(undefined)}
+              onPress={() => handleSubmit()}
             >
               <View style={styles.row}>
                 <MaterialIcons name="save" color="#FFF" size={30} />

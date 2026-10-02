@@ -17,18 +17,19 @@ export enum Day {
 
 export interface TimeInterval {
     type: "regular"|"special"
-    regular: RegularTimeInterval
-    special: SpecialTimeInterval
+    regular?: RegularTimeInterval
+    special?: SpecialTimeInterval
 }
 
 export interface RegularTimeInterval {
+    start: number,
     measurement: TimeMeasurement
     value: number,
     repeat: boolean
 }
 
 export interface SpecialTimeInterval {
-    type: "days"|"workdays"|"weekends"
+    type: "today"|"tomorrow"|"days"|"workdays"|"weekends"
     days?: Day[]
     workdays?: boolean
     weekends?: boolean
@@ -55,9 +56,9 @@ export interface Sound {
 }
 
 export interface Reminder {
-    id: number
+    id: string
     name: string
-    type: "time"|"location"|"time&location"
+    type: "time"|"location"|"time+location"
     time?: TimeReminder
     location?: LocationReminder
     sendNotification: boolean

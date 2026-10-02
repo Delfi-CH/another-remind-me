@@ -3,7 +3,7 @@ import { getStyles } from "@/style/styles";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import { useState } from "react";
-import { Appearance, Switch, Text, View } from "react-native";
+import { Appearance, Switch, Text, View, ActivityIndicator } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
 Notifications.setNotificationHandler({
@@ -114,6 +114,12 @@ export default function Settings() {
       ...context.settings,
       allowGeolocation: value,
     });
+  }
+
+  if (!context.isLoaded) {
+    return <View style={styles.container}>
+      <ActivityIndicator size={"large"}></ActivityIndicator>
+    </View>
   }
 
   return (
